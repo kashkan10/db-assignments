@@ -85,10 +85,10 @@ async function task_1_4(db) {
         SELECT 
             CustomerID As "Customer Id", 
             Count(CustomerID) As "Total number of Orders",
-            ROUND(Count(CustomerID) / (SELECT count(*) from orders) * 100,5) as "% of all orders"
+            ROUND(Count(CustomerID) / (SELECT count(*) FROM Orders) * 100,5) as "% of all orders"
         FROM Orders
         GROUP BY CustomerID
-        ORDER BY Count(CustomerID) / (SELECT count(*) from orders) * 100 desc, CustomerID
+        ORDER BY Count(CustomerID) / (SELECT count(*) FROM Orders) * 100 desc, CustomerID
     `);
     return result[0];
 }
@@ -317,7 +317,7 @@ async function task_1_15(db) {
             (SELECT COUNT(*) FROM Orders WHERE YEAR(OrderDate) = 1997 AND MONTH(OrderDate)=10) AS October,
             (SELECT COUNT(*) FROM Orders WHERE YEAR(OrderDate) = 1997 AND MONTH(OrderDate)=11) AS November,
             (SELECT COUNT(*) FROM Orders WHERE YEAR(OrderDate) = 1997 AND MONTH(OrderDate)=12) AS December
-        FROM orders
+        FROM Orders
         LIMIT 1
     `);
     return result[0];
