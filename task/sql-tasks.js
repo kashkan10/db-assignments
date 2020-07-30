@@ -86,7 +86,7 @@ async function task_1_4(db) {
             CustomerID As "Customer Id", 
             Count(CustomerID) As "Total number of Orders",
             ROUND(Count(CustomerID) / (SELECT count(*) from orders) * 100,5) as "% of all orders"
-        FROM orders
+        FROM Orders
         GROUP BY CustomerID
         ORDER BY Count(CustomerID) / (SELECT count(*) from orders) * 100 desc, CustomerID
     `);
@@ -106,7 +106,7 @@ async function task_1_5(db) {
             ProductId,
             ProductName,
             QuantityPerUnit
-        FROM products
+        FROM Products
         WHERE ProductName REGEXP '^[A-F]'
         ORDER BY ProductName
     `);
@@ -128,7 +128,7 @@ async function task_1_6(db) {
             ProductName,
             c.CategoryName,
             s.CompanyName AS SupplierCompanyName
-        FROM products p JOIN categories c ON p.CategoryID = c.CategoryID JOIN suppliers s ON p.SupplierID = s.SupplierID
+        FROM Products p JOIN Categories c ON p.CategoryID = c.CategoryID JOIN Suppliers s ON p.SupplierID = s.SupplierID
         ORDER BY ProductName, SupplierCompanyName
     `);
     return result[0];
@@ -150,7 +150,7 @@ async function task_1_7(db) {
             e1.EmployeeId,
             CONCAT(e1.FirstName, ' ', e1.LastName) AS FullName,
             ifNull(CONCAT(e2.FirstName, ' ', e2.LastName), '-') AS ReportsTo
-        FROM employees e1 LEFT JOIN employees e2 ON e1.ReportsTo = e2.EmployeeID
+        FROM Employees e1 LEFT JOIN Employees e2 ON e1.ReportsTo = e2.EmployeeID
         ORDER BY EmployeeId
     `);
     return result[0];
@@ -169,7 +169,7 @@ async function task_1_8(db) {
         SELECT 
             CategoryName,
             COUNT(*) AS TotalNumberOfProducts
-        FROM categories c JOIN products p ON c.CategoryID = p.CategoryID
+        FROM Categories c JOIN Products p ON c.CategoryID = p.CategoryID
         GROUP BY c.CategoryID
         ORDER BY CategoryName
     `);
@@ -189,7 +189,7 @@ async function task_1_9(db) {
         SELECT 
             CustomerID,
             ContactName
-        FROM customers
+        FROM Customers
         WHERE ContactName LIKE "F__n%"
     `);
     return result[0];
@@ -207,7 +207,7 @@ async function task_1_10(db) {
         SELECT
             ProductID,
             ProductName
-        FROM products
+        FROM Products
         WHERE Discontinued = 1
     `);
     return result[0];
@@ -227,7 +227,7 @@ async function task_1_11(db) {
         SELECT
             ProductName,
             UnitPrice
-        FROM products
+        FROM Products
         WHERE UnitPrice BETWEEN 5 AND 15
         ORDER BY UnitPrice, ProductName
     `);
@@ -250,7 +250,7 @@ async function task_1_12(db) {
             SELECT 
 		        ProductName,
 		        UnitPrice 
-	        FROM products
+	        FROM Products
 	        ORDER BY UnitPrice desc
 	        LIMIT 20) t
         ORDER BY UnitPrice, ProductName
@@ -269,9 +269,9 @@ async function task_1_13(db) {
     let result = await db.query(`
         SELECT *
         FROM 
-            (SELECT COUNT(ProductID) AS TotalOfCurrentProducts  FROM products) a 
+            (SELECT COUNT(ProductID) AS TotalOfCurrentProducts  FROM Products) a 
             JOIN 
-            (SELECT COUNT(ProductID) AS TotalOfDiscontinuedProducts  FROM products WHERE Discontinued = 1) b
+            (SELECT COUNT(ProductID) AS TotalOfDiscontinuedProducts  FROM Products WHERE Discontinued = 1) b
     `);
     return result[0];
 }
@@ -289,7 +289,7 @@ async function task_1_14(db) {
             ProductName,
             UnitsOnOrder,
             UnitsInStock
-        FROM products
+        FROM Products
         WHERE UnitsInStock < UnitsOnOrder
     `);
     return result[0];
@@ -305,18 +305,18 @@ async function task_1_14(db) {
 async function task_1_15(db) {
     let result = await db.query(`
         SELECT 
-            (SELECT count(*) FROM orders WHERE YEAR(OrderDate) = 1997 AND MONTH(OrderDate)=1) AS January,
-            (SELECT count(*) FROM orders WHERE YEAR(OrderDate) = 1997 AND MONTH(OrderDate)=2) AS February,
-            (SELECT count(*) FROM orders WHERE YEAR(OrderDate) = 1997 AND MONTH(OrderDate)=3) AS March,
-            (SELECT count(*) FROM orders WHERE YEAR(OrderDate) = 1997 AND MONTH(OrderDate)=4) AS April,
-            (SELECT count(*) FROM orders WHERE YEAR(OrderDate) = 1997 AND MONTH(OrderDate)=5) AS May,
-            (SELECT count(*) FROM orders WHERE YEAR(OrderDate) = 1997 AND MONTH(OrderDate)=6) AS June,
-            (SELECT count(*) FROM orders WHERE YEAR(OrderDate) = 1997 AND MONTH(OrderDate)=7) AS July,
-            (SELECT count(*) FROM orders WHERE YEAR(OrderDate) = 1997 AND MONTH(OrderDate)=8) AS August,
-            (SELECT count(*) FROM orders WHERE YEAR(OrderDate) = 1997 AND MONTH(OrderDate)=9) AS September,
-            (SELECT count(*) FROM orders WHERE YEAR(OrderDate) = 1997 AND MONTH(OrderDate)=10) AS October,
-            (SELECT count(*) FROM orders WHERE YEAR(OrderDate) = 1997 AND MONTH(OrderDate)=11) AS November,
-            (SELECT count(*) FROM orders WHERE YEAR(OrderDate) = 1997 AND MONTH(OrderDate)=12) AS December
+            (SELECT COUNT(*) FROM Orders WHERE YEAR(OrderDate) = 1997 AND MONTH(OrderDate)=1) AS January,
+            (SELECT COUNT(*) FROM Orders WHERE YEAR(OrderDate) = 1997 AND MONTH(OrderDate)=2) AS February,
+            (SELECT COUNT(*) FROM Orders WHERE YEAR(OrderDate) = 1997 AND MONTH(OrderDate)=3) AS March,
+            (SELECT COUNT(*) FROM Orders WHERE YEAR(OrderDate) = 1997 AND MONTH(OrderDate)=4) AS April,
+            (SELECT COUNT(*) FROM Orders WHERE YEAR(OrderDate) = 1997 AND MONTH(OrderDate)=5) AS May,
+            (SELECT COUNT(*) FROM Orders WHERE YEAR(OrderDate) = 1997 AND MONTH(OrderDate)=6) AS June,
+            (SELECT COUNT(*) FROM Orders WHERE YEAR(OrderDate) = 1997 AND MONTH(OrderDate)=7) AS July,
+            (SELECT COUNT(*) FROM Orders WHERE YEAR(OrderDate) = 1997 AND MONTH(OrderDate)=8) AS August,
+            (SELECT COUNT(*) FROM Orders WHERE YEAR(OrderDate) = 1997 AND MONTH(OrderDate)=9) AS September,
+            (SELECT COUNT(*) FROM Orders WHERE YEAR(OrderDate) = 1997 AND MONTH(OrderDate)=10) AS October,
+            (SELECT COUNT(*) FROM Orders WHERE YEAR(OrderDate) = 1997 AND MONTH(OrderDate)=11) AS November,
+            (SELECT COUNT(*) FROM Orders WHERE YEAR(OrderDate) = 1997 AND MONTH(OrderDate)=12) AS December
         FROM orders
         LIMIT 1
     `);
@@ -336,7 +336,7 @@ async function task_1_16(db) {
             OrderID,
             CustomerID,
             ShipCountry
-        FROM orders
+        FROM Orders
         WHERE ShipPostalCode IS not null
     `);
     return result[0];
@@ -356,7 +356,7 @@ async function task_1_17(db) {
         SELECT
             CategoryName,
             SUM(UnitPrice) / COUNT(*) AS AvgPrice
-        FROM products p JOIN categories c ON p.CategoryID = c.CategoryID
+        FROM Products p JOIN Categories c ON p.CategoryID = c.CategoryID
         GROUP BY p.CategoryID
         ORDER BY AvgPrice desc, CategoryName
     `);
@@ -376,7 +376,7 @@ async function task_1_18(db) {
         SELECT
             DATE_FORMAT(OrderDate, '%Y-%m-%d %T') AS OrderDate, 
             COUNT(*) AS "Total Number of Orders"
-        FROM orders
+        FROM Orders
         WHERE YEAR(OrderDate) = 1998
         GROUP BY OrderDate
     `);
@@ -397,7 +397,7 @@ async function task_1_19(db) {
             o.CustomerID,
             CompanyName,
             SUM(od.UnitPrice * Quantity) AS "TotalOrdersAmount, $"
-        FROM orders o JOIN customers c ON o.CustomerID = c.CustomerID JOIN orderdetails od ON o.OrderID = od.OrderID
+        FROM Orders o JOIN Customers c ON o.CustomerID = c.CustomerID JOIN OrderDetails od ON o.OrderID = od.OrderID
         GROUP BY CustomerID
         HAVING SUM(od.UnitPrice * Quantity) > 10000
         ORDER BY SUM(od.UnitPrice * Quantity) desc, CustomerID
@@ -419,7 +419,7 @@ async function task_1_20(db) {
             e.EmployeeID,
             CONCAT(e.FirstName, ' ', e.LastName) AS "Employee Full Name",
             SUM(UnitPrice * Quantity) AS "Amount, $"
-        FROM orderdetails od JOIN orders o ON od.OrderID = o.OrderID JOIN employees e ON o.EmployeeID = e.EmployeeID
+        FROM OrderDetails od JOIN Orders o ON od.OrderID = o.OrderID JOIN Employees e ON o.EmployeeID = e.EmployeeID
         GROUP BY EmployeeID
         ORDER BY SUM(UnitPrice * Quantity) desc
         LIMIT 1
@@ -438,7 +438,7 @@ async function task_1_21(db) {
         SELECT
             OrderID,
             SUM(UnitPrice * Quantity) AS "Maximum Purchase Amount, $"
-        FROM orderdetails
+        FROM OrderDetails
         GROUP BY OrderID
         ORDER BY SUM(UnitPrice * Quantity) desc
         LIMIT 1
@@ -459,11 +459,11 @@ async function task_1_22(db) {
             CompanyName,
             ProductName,
             od1.UnitPrice AS "PricePerItem"
-        FROM customers c1 JOIN orders o1 ON o1.CustomerID = c1.CustomerID JOIN orderdetails od1 ON od1.OrderID = o1.OrderID JOIN products p ON p.ProductID = od1.ProductID
+        FROM Customers c1 JOIN Orders o1 ON o1.CustomerID = c1.CustomerID JOIN OrderDetails od1 ON od1.OrderID = o1.OrderID JOIN Products p ON p.ProductID = od1.ProductID
         WHERE od1.UnitPrice = (
             SELECT 
                 MAX(od2.UnitPrice) 
-            FROM customers c2 JOIN orders o2 ON o2.CustomerID = c2.CustomerID JOIN orderdetails od2 ON od2.OrderID = o2.OrderID
+            FROM Customers c2 JOIN Orders o2 ON o2.CustomerID = c2.CustomerID JOIN OrderDetails od2 ON od2.OrderID = o2.OrderID
             WHERE c2.CompanyName = c1.CompanyName)
         ORDER BY PricePerItem desc, CompanyName, ProductName
     `);
