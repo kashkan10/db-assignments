@@ -48,7 +48,7 @@ async function task_1_2(db) {
             OrderId as "Order Id",
             SUM(UnitPrice * Quantity) AS "Order Total Price",
             ROUND(SUM(Discount * Quantity)/SUM(UnitPrice * Quantity) * 100, 3) AS "Total Order Discount, %"
-        FROM orderdetails
+        FROM OrderDetails
         GROUP BY OrderID
         ORDER BY OrderID desc
     `);
@@ -65,7 +65,7 @@ async function task_1_2(db) {
 async function task_1_3(db) {
     let result = await db.query(`
         SELECT CustomerId, CompanyName
-        FROM customers
+        FROM Customers
         WHERE Fax IS null AND Country = "USA"
     `);
     return result[0];
