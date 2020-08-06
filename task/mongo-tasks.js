@@ -141,7 +141,7 @@ async function task_1_4(db) {
             $project: {
                 "Customer Id": "$_id",
                 "Total number of Orders": "$CustomerOrdersCount",
-                "% of all orders": { $round: [{ $multiply: [{ $divide: ["$CustomerOrdersCount", { $first: "$Total" }] }, 100] }, 3] },
+                "% of all orders": { $round: [{ $multiply: [{ $divide: ["$CustomerOrdersCount", { $arrayElemAt: ["$Total", 0] }] }, 100] }, 3] },
                 _id: 0
             }
         },
@@ -216,8 +216,8 @@ async function task_1_6(db) {
             $project: {
                 _id: 0,
                 ProductName: 1,
-                CategoryName: { $first: "$categories.CategoryName" },
-                SupplierCompanyName: { $first: "$suppliers.CompanyName" }
+                CategoryName: { $arrayElemAt: ["$categories.CategoryName", 0] },
+                SupplierCompanyName: { $arrayElemAt: ["$suppliers.CompanyName", 0] }
             }
         },
         {
@@ -252,7 +252,7 @@ async function task_1_7(db) {
                 _id: 0,
                 EmployeeID: 1,
                 FullName: { $concat: ["$TitleOfCourtesy", "$FirstName", " ", "$LastName"] },
-                ReportsTo: { $ifNull: [{ $concat: [{ $first: "$repTo.FirstName" }, " ", { $first: "$repTo.LastName" }] }, "-"] }
+                ReportsTo: { $ifNull: [{ $concat: [{ $arrayElemAt: ["$repTo.FirstName", 0] }, " ", { $arrayElemAt: ["$repTo.LastName", 0] }] }, "-"] }
             }
         },
         {
@@ -673,8 +673,8 @@ async function task_1_19(db) {
         {
             $project: {
                 _id: 0,
-                CustomerID: { $first: "$_id" },
-                CompanyName: { $first: "$customers.CompanyName" },
+                CustomerID: { $arrayElemAt: ["$_id", 0] },
+                CompanyName: { $arrayElemAt: ["$customers.CompanyName", 0] },
                 "TotalOrdersAmount, $": { $round: ["$Total", 2] }
             }
         },
@@ -719,8 +719,8 @@ async function task_1_20(db) {
         {
             $project: {
                 _id: 0,
-                EmployeeID: { $first: "$employees.EmployeeID" },
-                "Employee Full Name": { $concat: [{ $first: "$employees.FirstName" }, " ", { $first: "$employees.LastName" }] },
+                EmployeeID: { $arrayElemAt: ["$employees.EmployeeID", 0] },
+                "Employee Full Name": { $concat: [{ $arrayElemAt: ["$employees.FirstName", 0] }, " ", { $arrayElemAt: ["$employees.LastName", 0] }] },
                 "Amount, $": "$Total"
             }
         },
@@ -799,7 +799,7 @@ async function task_1_22(db) {
             $project: {
                 _id: 0,
                 PricePerItem: { $max: "$Products.Prices" },
-                CustomerID: { $first: "$_id" },
+                CustomerID: { $arrayElemAt: ["$_id", 0] },
                 ProductID: { $arrayElemAt: ["$Products.Id", { $indexOfArray: ["$Products.Prices", { $max: "$Products.Prices" }] }] }
             }
         },
@@ -826,8 +826,8 @@ async function task_1_22(db) {
                 _id: 0,
                 PricePerItem: 1,
                 CustomerID: 1,
-                CompanyName: { $first: "$customers.CompanyName" },
-                ProductName: { $first: "$products.ProductName" }
+                CompanyName: { $arrayElemAt: ["$customers.CompanyName", 0] },
+                ProductName: { $arrayElemAt: ["$products.ProductName", 0] }
             }
         },
         {
