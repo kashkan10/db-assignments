@@ -242,10 +242,11 @@ async function task_3_1(db) {
                 "pipeline": [
                     {
                         "$match": {
+                            "versions.initiativeId": ObjectId("58af4da0b310d92314627290"),
                             $expr: {
                                 $eq: ["$value", "$$critValue"]
-                            },
-                            "versions.initiativeId": ObjectId("58af4da0b310d92314627290")
+                            }
+                            
                         }
                     }
                 ],
